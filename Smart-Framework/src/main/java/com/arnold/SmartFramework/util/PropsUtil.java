@@ -1,4 +1,4 @@
-package com.arnold.util;
+package com.arnold.SmartFramework.util;
 
 
 import org.slf4j.Logger;

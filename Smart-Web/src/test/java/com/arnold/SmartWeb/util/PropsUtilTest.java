@@ -1,4 +1,4 @@
-package com.arnold.util;
+package com.arnold.SmartWeb.util;
 
 import org.junit.Test;
 import org.junit.Before;

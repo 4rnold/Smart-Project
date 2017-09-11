@@ -1,4 +1,4 @@
-package com.arnold.model;
+package com.arnold.SmartWeb.model;
 
 /**
  * 客户

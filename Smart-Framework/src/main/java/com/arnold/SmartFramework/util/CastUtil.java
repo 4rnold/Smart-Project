@@ -1,6 +1,4 @@
-package com.arnold.util;
-
-import org.apache.commons.lang3.StringUtils;
+package com.arnold.SmartFramework.util;
 
 /**
  * 转型操作工具类

@@ -1,11 +1,8 @@
-package com.arnold.service;
+package com.arnold.SmartWeb.service;
 
-import com.arnold.helper.DatabaseHelper;
-import com.arnold.helper.DatabasePoolHelper;
-import com.arnold.model.Customer;
+import com.arnold.SmartWeb.helper.DatabasePoolHelper;
+import com.arnold.SmartWeb.model.Customer;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 public class CustomerService {

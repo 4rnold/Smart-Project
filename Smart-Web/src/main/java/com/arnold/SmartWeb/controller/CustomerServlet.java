@@ -1,8 +1,10 @@
-package com.arnold.controller;
+package com.arnold.SmartWeb.controller;
 
 
-import com.arnold.model.Customer;
-import com.arnold.service.CustomerService;
+
+
+import com.arnold.SmartWeb.model.Customer;
+import com.arnold.SmartWeb.service.CustomerService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

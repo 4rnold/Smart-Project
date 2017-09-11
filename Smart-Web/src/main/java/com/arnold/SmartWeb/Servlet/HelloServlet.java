@@ -1,6 +1,5 @@
-package com.arnold.Servlet;
+package com.arnold.SmartWeb.Servlet;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

@@ -1,6 +1,6 @@
 package com.arnold.SmartWeb.helper;
 
-import com.arnold.SmartWeb.util.PropsUtil;
+import com.arnold.SmartFramework.util.PropsUtil;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.slf4j.Logger;

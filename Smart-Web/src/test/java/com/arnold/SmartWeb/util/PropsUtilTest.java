@@ -1,5 +1,6 @@
 package com.arnold.SmartWeb.util;
 
+import com.arnold.SmartFramework.util.PropsUtil;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;

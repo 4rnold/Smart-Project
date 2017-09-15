@@ -17,6 +17,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,8 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@WebServlet(urlPatterns = "/*", loadOnStartup = 0)
 public class DispatcherServlet extends HttpServlet {
-
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -38,10 +39,11 @@ public class DispatcherServlet extends HttpServlet {
         ServletContext servletContext = config.getServletContext();
 
 
-        //注册servlet?
+        //注册jspServlet
         ServletRegistration jspServlet = servletContext.getServletRegistration("jsp");
         jspServlet.addMapping(ConfigHelper.getAppJspPath());
 
+        //注册静态资源servlet
         ServletRegistration defaultServlet = servletContext.getServletRegistration("default");
         defaultServlet.addMapping(ConfigHelper.getAppAssetPath());
 

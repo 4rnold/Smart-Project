@@ -1,9 +1,12 @@
 package com.arnold.SmartFramework.helper;
 
 import com.arnold.SmartFramework.annotation.Aspect;
+import com.arnold.SmartFramework.annotation.Service;
+import com.arnold.SmartFramework.annotation.Transaction;
 import com.arnold.SmartFramework.proxy.AspectProxy;
 import com.arnold.SmartFramework.proxy.Proxy;
 import com.arnold.SmartFramework.proxy.ProxyManager;
+import com.arnold.SmartFramework.proxy.TransactionProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,7 @@ public class AopHelper {
 
     static {
         try {
+
             Map<Class<?>, Set<Class<?>>> proxyMap = createProxyMap();
             Map<Class<?>, List<Proxy>> targetMap = createTargetMap(proxyMap);
 
@@ -33,7 +37,12 @@ public class AopHelper {
     }
 
 
-
+    /**
+     * class集合中找到指定切面的集合
+     * @param aspect
+     * @return
+     * @throws Exception
+     */
     private static Set<Class<?>> createTargetClassSet(Aspect aspect) throws Exception {
         Set<Class<?>> targetClassSet = new HashSet<Class<?>>();
         Class<? extends Annotation> annotation = aspect.value();
@@ -63,7 +72,16 @@ public class AopHelper {
                 proxyMap.put(proxyCls, targetClassSet);
             }
         }
+
+        //添加事务代理
+        addTransactionProxy(proxyMap);
+
         return proxyMap;
+    }
+
+    private static void addTransactionProxy(Map<Class<?>, Set<Class<?>>> proxyMap) {
+        Set<Class<?>> serviceClassSet = ClassHelper.getClassSetByAnnotation(Service.class);
+        proxyMap.put(TransactionProxy.class, serviceClassSet);
     }
 
     /**

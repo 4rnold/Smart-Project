@@ -1,8 +1,7 @@
-/*
-package com.arnold.SmartWeb.helper;
+package com.arnold.SmartFramework.helper;
 
 import com.arnold.SmartFramework.util.PropsUtil;
-import com.arnold.SmartWeb.model.Customer;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.slf4j.Logger;
@@ -131,9 +130,50 @@ public class DatabaseHelper {
         }
     }
 
+    /**
+     * 拼装sql语句
+     * @param entityClass
+     * @param fieldMap
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean insertEntity(Class<T> entityClass, Map<String,Object> fieldMap) {
+        if (MapUtils.isEmpty(fieldMap)){
+            LOGGER.error("can not insert entity: fieldMap is empty");
+            return false;
+        }
 
-    public static boolean insertEntity(Class<Customer> customerClass, Map<String, Object> fieldMap) {
-        return Boolean.parseBoolean(null);
+        String sql = "INSERT INTO " + entityClass.getSimpleName();
+        StringBuilder columns = new StringBuilder("(");
+        StringBuilder values = new StringBuilder("(");
+        for (String fieldName : fieldMap.keySet()) {
+            columns.append(fieldName).append(", ");
+            values.append("?, ");
+        }
+        columns.replace(columns.lastIndexOf(", "), columns.length(), ")");
+        values.replace(values.lastIndexOf(", "), values.length(), ")");
+        sql += columns + "values " + values;
+        Object[] params = fieldMap.values().toArray();
+        return update(sql, params) == 1;
+
     }
+
+    /**
+     * 封装dbutils中的update方法
+     * @param sql
+     * @param params
+     * @return
+     */
+    private static int update(String sql, Object[] params) {
+        Connection connection = getConnection();
+        int rows = 0;
+        try {
+            rows = QUERY_RUNNER.update(connection, sql, params);
+        } catch (SQLException e) {
+            LOGGER.error("execute update fail", e);
+            throw new RuntimeException(e);
+        }
+        return rows;
+    }
+
 }
-*/

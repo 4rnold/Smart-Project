@@ -8,8 +8,8 @@ import com.arnold.SmartFramework.annotation.Controller;
 @Controller
 public class CustomerSmartController {
 
-    @Action("get:/customer")
-    public View index(Param param) {
+    @Action("GET:/customer")
+    public View index() {
         return new View("customer.jsp");
     }
 }

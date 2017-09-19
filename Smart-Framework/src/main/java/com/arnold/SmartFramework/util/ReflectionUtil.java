@@ -2,6 +2,7 @@ package com.arnold.SmartFramework.util;
 
 import com.arnold.SmartFramework.Bean.Handler;
 import com.arnold.SmartFramework.Bean.Param;
+import com.arnold.SmartFramework.helper.BeanHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,14 @@ public final class ReflectionUtil {
 
     public static Object invokeHandler(Handler handler, Param param) {
 
-        return invokeMethod(handler.getControllerClass(), handler.getActionMethod(), param);
+        Object controllerBean = BeanHelper.getBean(handler.getControllerClass());
+
+        if (param.isEmpty()) {
+            return invokeMethod(controllerBean, handler.getActionMethod(), null);
+        } else {
+            return invokeMethod(controllerBean, handler.getActionMethod(), param);
+        }
+
     }
 
     /**

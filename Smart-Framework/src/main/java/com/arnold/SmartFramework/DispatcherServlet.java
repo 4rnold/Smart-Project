@@ -4,12 +4,8 @@ import com.arnold.SmartFramework.Bean.Data;
 import com.arnold.SmartFramework.Bean.Handler;
 import com.arnold.SmartFramework.Bean.Param;
 import com.arnold.SmartFramework.Bean.View;
-import com.arnold.SmartFramework.helper.BeanHelper;
-import com.arnold.SmartFramework.helper.ConfigHelper;
-import com.arnold.SmartFramework.helper.ControllerHelper;
+import com.arnold.SmartFramework.helper.*;
 import com.arnold.SmartFramework.util.*;
-import com.sun.deploy.util.ArrayUtil;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,13 +17,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @WebServlet(urlPatterns = "/*", loadOnStartup = 0)
@@ -39,13 +31,17 @@ public class DispatcherServlet extends HttpServlet {
         ServletContext servletContext = config.getServletContext();
 
 
-        //注册jspServlet
+        //注册 defaultservlet jspservlet
         ServletRegistration jspServlet = servletContext.getServletRegistration("jsp");
-        jspServlet.addMapping(ConfigHelper.getAppJspPath());
+        jspServlet.addMapping("/index.jsp");
+        jspServlet.addMapping(ConfigHelper.getAppJspPath() + "*");
 
-        //注册静态资源servlet
+
         ServletRegistration defaultServlet = servletContext.getServletRegistration("default");
-        defaultServlet.addMapping(ConfigHelper.getAppAssetPath());
+        defaultServlet.addMapping("/favicon.ico");
+        defaultServlet.addMapping(ConfigHelper.getAppAssetPath() + "*");
+
+        UploadHelper.init(servletContext);
 
     }
 
@@ -57,11 +53,11 @@ public class DispatcherServlet extends HttpServlet {
 
         Handler handler = ControllerHelper.getHandler(reqMethod, reqPath);
         if (handler != null) {
-            Class<?> controllerClass = handler.getControllerClass();
-            Object controllerBean = BeanHelper.getBean(controllerClass);
+            //Class<?> controllerClass = handler.getControllerClass();
+            //Object controllerBean = BeanHelper.getBean(controllerClass);
             
             //请求参数
-            Map<String, String[]> parameterMap = req.getParameterMap();
+            /*Map<String, String[]> parameterMap = req.getParameterMap();
             //req.getParameter();
             Map<String, Object> paramMap = new HashMap<>();
             parameterMap.forEach((k,v) -> paramMap.put(k, StringUtils.join(v)));
@@ -80,10 +76,20 @@ public class DispatcherServlet extends HttpServlet {
 
             }
 
-            Param param = new Param(paramMap);
+
+            Param param = new Param(paramMap);*/
+
+            Param param;
+            if (UploadHelper.isMultipart(req)) {
+                param = UploadHelper.createParam(req);
+            } else {
+                param = RequestHelper.createParam(req);
+            }
+
 
             //调用action
             //Method actionMethod = handler.getActionMethod();
+
             Object result = ReflectionUtil.invokeHandler(handler, param);
             if (result instanceof View) {
                 View view = (View) result;
@@ -96,7 +102,7 @@ public class DispatcherServlet extends HttpServlet {
                         for (Map.Entry<String, Object> entry : model.entrySet()) {
                             req.setAttribute(entry.getKey(), entry.getValue());
                         }
-                        req.getRequestDispatcher(ConfigHelper.getAppAssetPath() + path).forward(req,resp);
+                        req.getRequestDispatcher(ConfigHelper.getAppJspPath() + path).forward(req,resp);
                     }
                 }
             } else if (result instanceof Data){

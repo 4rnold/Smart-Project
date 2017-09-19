@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 进入 客户列表 界面1
  */
-@WebServlet("/customer")
+//@WebServlet("/customer")
 public class CustomerServlet extends HttpServlet {
 
     private CustomerService customerService;
